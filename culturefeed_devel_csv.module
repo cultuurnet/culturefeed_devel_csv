@@ -47,7 +47,7 @@ function culturefeed_devel_csv_page() {
     $csv_items[] = array(
       str_replace(',','",', $elements[0]),
       $elements[1],
-       '"' . date("Y-m-d H:i:s", $dblog->timestamp) . '"'
+      date("Y-m-d H:i:s", $dblog->timestamp)
     );
   }
   
