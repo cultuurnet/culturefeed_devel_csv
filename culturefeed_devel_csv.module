@@ -45,16 +45,16 @@ function culturefeed_devel_csv_page() {
   foreach ($result as $dblog) {
     $elements = explode('. Time taken: ', str_replace('Slow query on api: ', '', $dblog->message));
     $csv_items[] = array(
-      '"' . str_replace('"', '""', $elements[0]) . '"',
-      '"' . $elements[1] . '"',
-      '"' . date("Y-m-d H:i:s", $dblog->timestamp) . '"'
+      $elements[0],
+      $elements[1],
+      date("Y-m-d H:i:s", $dblog->timestamp)
     );
   }
   
   // send response headers to the browser
   
-  // echo '<pre>';print_r($csv_items);echo '</pre>';
-  // exit;
+   echo '<pre>';print_r($csv_items);echo '</pre>';
+   exit;
   
   drupal_add_http_header('Content-Type', 'text/csv');
   drupal_add_http_header('Content-Disposition', 'attachment;filename=export.csv');
