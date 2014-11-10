@@ -61,7 +61,7 @@ function culturefeed_devel_csv_page() {
   $out = fopen('php://output', 'w');
   
   foreach ($csv_items as $csv_item) {
-    fputcsv($out, $csv_item, ',', chr(0));
+    fputcsv($out, $csv_item);
   }
   fclose($out);
   drupal_exit();
