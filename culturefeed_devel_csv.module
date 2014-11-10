@@ -36,12 +36,6 @@ function culturefeed_devel_csv_page() {
     
   $csv_items = array();
   
-  $csv_items[] = array(
-    '"query"',
-    'ms',
-    'timestamp'
-  );
-  
   foreach ($result as $dblog) {
     $elements = explode('. Time taken: ', str_replace('Slow query on api: ', '', $dblog->message));
     $csv_items[] = array(
