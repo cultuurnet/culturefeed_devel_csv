@@ -1,0 +1,7 @@
+name = CultureFeed Search CSV
+description = Generates CSV with search results
+package = CultureFeed
+version = VERSION
+core = 7.x
+
+dependencies[] = culturefeed_search

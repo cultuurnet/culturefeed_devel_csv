@@ -1,0 +1,66 @@
+<?php
+
+use \CultuurNet\Search\Parameter;
+
+/**
+ * Implements hook_menu().
+ */
+function culturefeed_devel_csv_menu() {
+
+  $items = array();
+
+  $items['culturefeed/devel/csv'] = array(
+    'title' => 'Culturefeed Devel CSV',
+    'title callback' => FALSE,
+    'page callback' => 'culturefeed_devel_csv_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  
+  return $items;
+  
+}
+
+function culturefeed_devel_csv_page() {
+
+  $query = db_select('watchdog', 'w');
+  $query
+    ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'));
+  $query->condition('type', 'culturefeed_devel', $operator = '=');
+  if (!empty($_GET['date'])) {
+    $query->condition('timestamp', array(strtotime($_GET['date']), strtotime($_GET['date'] . ' 23.59.59')), 'BETWEEN');
+  }
+  
+  $result = $query
+    ->execute();
+    
+  $csv_items = array();
+  
+  $csv_items[] = array(
+    '"query"',
+    '"ms"',
+    '"timestamp"'
+  );
+  
+  foreach ($result as $dblog) {
+    $item = explode('. Time taken: ', str_replace('Slow query on api: ', '', $dblog->message));
+    //$item[] = date("Y-m-d\TH:i:s\Z", $dblog->timestamp);
+    $item[] = $dblog->timestamp;
+    $csv_items[] = $item;
+  }
+  
+  echo '<pre>';print_r($csv_items);echo '</pre>';
+
+  // send response headers to the browser
+  
+  drupal_add_http_header('Content-Type', 'text/csv');
+  drupal_add_http_header('Content-Disposition', 'attachment;filename=export.csv');
+  $out = fopen('php://output', 'w');
+  
+  foreach ($csv_items as $csv_item) {
+    fputcsv($out, $csv_item, ',', chr(0));
+  }
+  fclose($out);
+  drupal_exit();
+  
+}
