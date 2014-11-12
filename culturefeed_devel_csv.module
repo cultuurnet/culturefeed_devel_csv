@@ -23,7 +23,7 @@ function culturefeed_devel_csv_menu() {
 
 function culturefeed_devel_csv_page() {
 
-  if (!empty($_GET['date'])) { 
+  if (empty($_GET['date'])) { 
     print 'please use for example "?date=2015-08-06"';
     exit;
   }
