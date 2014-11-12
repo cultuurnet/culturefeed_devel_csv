@@ -23,13 +23,16 @@ function culturefeed_devel_csv_menu() {
 
 function culturefeed_devel_csv_page() {
 
+  if (!empty($_GET['date'])) { 
+    print 'please use for example "?date=2015-08-06"';
+    exit;
+  }
+
   $query = db_select('watchdog', 'w');
   $query
     ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'));
   $query->condition('type', 'culturefeed_devel', $operator = '=');
-  if (!empty($_GET['date'])) {
-    $query->condition('timestamp', array(strtotime($_GET['date']), strtotime($_GET['date'] . ' 23.59.59')), 'BETWEEN');
-  }
+  $query->condition('timestamp', array(strtotime($_GET['date']), strtotime($_GET['date'] . ' 23.59.59')), 'BETWEEN');
   
   $result = $query
     ->execute();
@@ -47,7 +50,7 @@ function culturefeed_devel_csv_page() {
   
   // send response headers to the browser  
   drupal_add_http_header('Content-Type', 'text/csv');
-  drupal_add_http_header('Content-Disposition', 'attachment;filename=export-' . date("d-m-Y") . '.csv');
+  drupal_add_http_header('Content-Disposition', 'attachment;filename=export-' . $_GET['date'] . '.csv');
   $out = fopen('php://output', 'w');
   
   foreach ($csv_items as $csv_item) {
